@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import bcrypt from "bcrypt";
 import User from "../models/UserModel";
 
 // GET ALL (ignora deletados)
@@ -27,10 +28,18 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
 
 // CREATE
 export const createUser = async (req: Request, res: Response): Promise<void> => {
-  const { name, password } = req.body;
+  const { name, email, password } = req.body;
 
   try {
-    const newUser = new User({ name, password });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      res.status(400).json({ message: "Email já está em uso" });
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ name, email, password: hashedPassword });
+
     await newUser.save();
     const { password: _, ...userWithoutPassword } = newUser.toObject();
     res.status(201).json(userWithoutPassword);
@@ -39,14 +48,21 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-// UPDATE 
+// UPDATE
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
-  const { name, password } = req.body;
+  const { name, email, password } = req.body;
 
   try {
+    const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
+
     const updatedUser = await User.findOneAndUpdate(
       { _id: req.params.id, isDeleted: false },
-      { name, password, updatedAt: new Date() },
+      {
+        ...(name && { name }),
+        ...(email && { email }),
+        ...(hashedPassword && { password: hashedPassword }),
+        updatedAt: new Date(),
+      },
       { new: true }
     ).select("-password");
 
@@ -79,7 +95,7 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-
+// RESTORE
 export const restoreUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const restoredUser = await User.findOneAndUpdate(

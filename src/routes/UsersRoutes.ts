@@ -5,16 +5,20 @@ import {
   createUser,
   updateUser,
   deleteUser,
-  restoreUser,       
+  restoreUser,
 } from "../controllers/user.controller";
+
+import { authenticateToken } from "../middlewares/authmiddlewares";
 
 const router: Router = Router();
 
-router.get("/", getAllUsers);              
-router.get("/:id", getUserById);            
-router.post("/", createUser);               
-router.put("/:id", updateUser);             
-router.delete("/:id", deleteUser);
-router.patch("/:id/restore", restoreUser);
+router.get("/", getAllUsers); // rota pública
+router.get("/:id", getUserById); // rota pública
+router.post("/", createUser); // rota pública 
+
+// rotas privadas
+router.put("/:id", authenticateToken, updateUser);
+router.delete("/:id", authenticateToken, deleteUser);
+router.patch("/:id/restore", authenticateToken, restoreUser);
 
 export default router;
