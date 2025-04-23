@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/UserModel";
 
-// GET ALL 
+// GET ALL (ignora deletados)
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
     const users = await User.find({ isDeleted: false }).select("-password");
@@ -11,7 +11,7 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-// GET BY ID 
+// GET BY ID (ignora deletados)
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await User.findOne({ _id: req.params.id, isDeleted: false }).select("-password");
