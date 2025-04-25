@@ -11,7 +11,7 @@ export interface UserModel extends Document {
 
 const UserSchema: Schema = new Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true }, // novo campo
+  email: { type: String, required: true, unique: true }, 
   password: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
