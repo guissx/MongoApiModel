@@ -3,8 +3,7 @@
     "builds": [
       {
         "src": "api/index.ts",
-        "use": "@vercel/node",
-        "regions": ["sfo1"]
+        "use": "@vercel/node"
       }
     ],
     "routes": [
