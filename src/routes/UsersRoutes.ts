@@ -14,7 +14,7 @@ const router: Router = Router();
 
 router.get("/", getAllUsers); // rota pública
 router.get("/:id", getUserById); // rota pública
-router.post("/", createUser); // rota pública 
+router.post("/register", createUser); // rota pública 
 
 // rotas privadas
 router.put("/:id", authenticateToken, updateUser);
