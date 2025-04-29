@@ -14,12 +14,7 @@ app.use(express.json());
 
 connectDB();
 
-app.use((req, res, next) => {
-  console.log(`Request recebido: ${req.method} ${req.url}`);
-  next();
-});
-
 app.use("/users", UsersRouters);
 app.use("/auth", AuthRoutes);
 
-export default serverless(app); 
+app.listen(process.env.PORT);
