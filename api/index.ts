@@ -1,7 +1,6 @@
 import express, { Application } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import serverless from "serverless-http";
 import { connectDB } from "../src/config/db";
 import UsersRouters from "../src/routes/UsersRoutes";
 import AuthRoutes from "../src/routes/AuthRoutes";
