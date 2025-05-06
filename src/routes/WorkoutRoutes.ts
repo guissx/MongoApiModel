@@ -1,4 +1,5 @@
 import { Router } from "express";
+import express from "express"; 
 import {
   createWorkout,
   getUserWorkouts,
@@ -10,6 +11,10 @@ import { authenticateToken } from "../middlewares/authmiddlewares";
 
 const router: Router = Router();
 
+// Middleware para parsear JSON
+router.use(express.json()); 
+
+// Rotas
 router.post("/", authenticateToken, createWorkout);
 router.get("/user/:userId", authenticateToken, getUserWorkouts);
 router.get("/:id", authenticateToken, getWorkoutById);
