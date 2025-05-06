@@ -6,7 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 interface JwtPayload {
   userId: string;
 }
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   userId?: string;
 }
 

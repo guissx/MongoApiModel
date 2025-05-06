@@ -1,23 +1,27 @@
 import { Request, Response } from "express";
 import { Workout } from "../models/WorkoutModel";
+import { AuthenticatedRequest } from "../middlewares/authmiddlewares";
 
 // CREATE
-export const createWorkout = async (req: Request, res: Response): Promise<void> => {
+export const createWorkout = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const { userId, title, date, exercises } = req.body;
+    const { title, date, exercises } = req.body;
+    const userId = req.userId; //(token JWT)
+
+    if (!userId) {
+      res.status(400).json({ success: false, message: "Usuário não autenticado" });
+      return;
+    }
 
     const workout = new Workout({
-      userId,
+      userId, 
       title,
       date: date || new Date(),
       exercises
     });
 
     const savedWorkout = await workout.save();
-    res.status(201).json({
-      success: true,
-      data: savedWorkout
-    });
+    res.status(201).json({ success: true, data: savedWorkout });
   } catch (error) {
     res.status(500).json({
       success: false,
